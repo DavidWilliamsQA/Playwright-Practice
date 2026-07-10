@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 
-test.only("Register a new user and login as the new user", async ({ page }) => {
+test("Register a new user and login as the new user", async ({ page }) => {
   await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
 
   const registerLink = page.locator(".text-reset");
