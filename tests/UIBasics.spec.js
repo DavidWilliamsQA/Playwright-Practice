@@ -26,4 +26,5 @@ test.only("Child Window/Tab handling", async ({ browser }) => {
   console.log(domain);
 
   await page.locator("#username").fill(domain);
+  console.log("input value: " + (await page.locator("#username").inputValue())); // We are getting the value of the input field to verify that we have filled it correctly.
 });
