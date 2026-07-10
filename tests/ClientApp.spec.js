@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 
-test.only("Register a new user", async ({ page }) => {
+test.only("Register a new user and login as the new user", async ({ page }) => {
   await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
 
   const registerLink = page.locator(".text-reset");
@@ -20,13 +20,19 @@ test.only("Register a new user", async ({ page }) => {
   const maleRadio = page.locator('input[type="radio"][value="Male"]');
   const femaleRadio = page.locator('input[type="radio"][value="Female"]');
   const ageCheckbox = page.locator('input[type="checkbox"]');
+  const firstNameValue = "John";
+  const lastNameValue = "Doe";
+  const emailValue = `test${Date.now()}@test.com`;
+  const passwordValue = "Password123";
+  const confirmPasswordValue = "Password123";
+  const occupationValue = "Student";
 
-  await firstName.fill("John");
-  await lastName.fill("Doe");
-  await email.fill(`test${Date.now()}@test.com`);
-  await password.fill("Password123");
-  await confirmPassword.fill("Password123");
-  await occupationDropdown.selectOption({ label: "Student" });
+  await firstName.fill(firstNameValue);
+  await lastName.fill(lastNameValue);
+  await email.fill(emailValue);
+  await password.fill(passwordValue);
+  await confirmPassword.fill(confirmPasswordValue);
+  await occupationDropdown.selectOption({ label: occupationValue });
   await maleRadio.check();
   await userMobile.fill("1234567890");
   await ageCheckbox.check();
@@ -35,4 +41,15 @@ test.only("Register a new user", async ({ page }) => {
   await expect(page.locator(".headcolor")).toHaveText(
     "Account Created Successfully",
   );
+  const loginButton = page.locator(".btn.btn-primary");
+
+  await loginButton.click();
+
+  await email.fill(emailValue);
+  await password.fill(passwordValue);
+  const loginSubmitButton = page.locator("#login");
+  await loginSubmitButton.click();
+
+  const firstItem = await page.locator(".card-body b").nth(0).textContent();
+  expect(firstItem).toBe("ADIDAS ORIGINAL");
 });
