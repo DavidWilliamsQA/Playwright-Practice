@@ -32,7 +32,7 @@ test.only("Register a new user and login as the new user", async ({ page }) => {
   await email.fill(emailValue);
   await password.fill(passwordValue);
   await confirmPassword.fill(confirmPasswordValue);
-  await occupationDropdown.selectOption({ label: occupationValue });
+  await occupationDropdown.selectOption(occupationValue);
   await maleRadio.check();
   await userMobile.fill("1234567890");
   await ageCheckbox.check();
