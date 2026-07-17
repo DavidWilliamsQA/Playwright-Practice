@@ -82,9 +82,31 @@ test.only("End to End test: Logging into the application, adding an item to the 
   const thankYoumessage = await page.locator(".hero-primary").textContent();
   expect(thankYoumessage).toBe(" Thankyou for the order. ");
 
-  const orderId = await page
+  let orderId = await page
     .locator(".em-spacer-1 .ng-star-inserted")
     .textContent();
 
+  orderId = orderId.replaceAll("|", "").trim();
+
   console.log(orderId);
+
+  const ordersButton = page.locator("button[routerlink*='myorders']");
+  await ordersButton.click();
+
+  await page.locator("tbody").waitFor();
+
+  const rows = page.locator("tbody tr");
+  const rowsCount = await rows.count();
+  for (let i = 0; i < rowsCount; ++i) {
+    const rowOrderId = await rows.nth(i).locator("th").textContent();
+    if (orderId.includes(rowOrderId)) {
+      await rows.nth(i).locator("button").first().click();
+      break;
+    }
+  }
+
+  const orderIdDetails = await page.locator(".col-text").textContent();
+  expect(orderId.includes(orderIdDetails)).toBeTruthy();
+
+  await page.pause();
 });
