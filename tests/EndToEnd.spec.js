@@ -28,5 +28,44 @@ test.only("End to End test", async ({ browser }) => {
   await cartButton.click();
   await page.locator("div li").first().waitFor();
 
-  await expect(page.locator("h3:has-text('iphone 13 pro')")).toBeVisible();
+  const isVisible = await page
+    .locator("h3:has-text('iphone 13 pro')")
+    .isVisible();
+  expect(isVisible).toBeTruthy();
+
+  const checkoutButton = page.locator("text=Checkout");
+  await checkoutButton.click();
+
+  const cvvCode = await page.locator(".input.txt").nth(1);
+  const nameOnCard = await page.locator(".input.txt").nth(2);
+  const applyCoupon = await page.locator(".input.txt").nth(3);
+  const selectCountry = await page.locator(".input.txt").nth(5);
+  const couponButton = await page.locator(".btn.btn-primary.mt-1");
+
+  await cvvCode.fill("123");
+  await nameOnCard.fill("John Doe");
+  await applyCoupon.fill("rahulshettyacademy");
+
+  await couponButton.click();
+  expect(await page.locator(".mt-1.ng-star-inserted").textContent()).toContain(
+    "* Coupon Applied",
+  );
+
+  await selectCountry.pressSequentially("ind", { delay: 100 });
+  const countryOption = page.locator(".ta-results");
+  await countryOption.waitFor();
+  const optionsCount = await countryOption.locator("button").count();
+  for (let i = 0; i < optionsCount; ++i) {
+    const optionText = await countryOption
+      .locator("button")
+      .nth(i)
+      .textContent();
+    if (optionText.trim() === "India") {
+      await countryOption.locator("button").nth(i).click();
+      break;
+    }
+  }
+
+  const placeorderButton = page.locator(".action__submit");
+  await placeorderButton.click();
 });
