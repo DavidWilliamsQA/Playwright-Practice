@@ -1,6 +1,8 @@
 const { test, expect } = require("@playwright/test");
 
-test.only("End to End test", async ({ browser }) => {
+test.only("End to End test: Logging into the application, adding an item to the cart, checking out, getting the order number and checking the order appears in the list of orders", async ({
+  browser,
+}) => {
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
@@ -76,4 +78,13 @@ test.only("End to End test", async ({ browser }) => {
 
   const placeorderButton = page.locator(".action__submit");
   await placeorderButton.click();
+
+  const thankYoumessage = await page.locator(".hero-primary").textContent();
+  expect(thankYoumessage).toBe(" Thankyou for the order. ");
+
+  const orderId = await page
+    .locator(".em-spacer-1 .ng-star-inserted")
+    .textContent();
+
+  console.log(orderId);
 });
