@@ -107,6 +107,4 @@ test.only("End to End test: Logging into the application, adding an item to the 
 
   const orderIdDetails = await page.locator(".col-text").textContent();
   expect(orderId.includes(orderIdDetails)).toBeTruthy();
-
-  await page.pause();
 });
