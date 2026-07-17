@@ -12,8 +12,10 @@ test.only("End to End test", async ({ browser }) => {
   const userPassword = page.locator("#userPassword");
   const loginButton = page.locator("#login");
   const cartButton = page.locator("[routerlink*='cart']");
-  await userEmail.fill("test123333@test.com");
-  await userPassword.fill("Password$12");
+  const userEmailText = "test123333@test.com";
+  const userPasswordText = "Password$12";
+  await userEmail.fill(userEmailText);
+  await userPassword.fill(userPasswordText);
   await loginButton.click();
 
   await page.locator(".card-body b").first().waitFor();
@@ -65,6 +67,12 @@ test.only("End to End test", async ({ browser }) => {
       break;
     }
   }
+
+  const userEmailDisplayed = await page
+    .locator(".user__name [type='text']")
+    .first()
+    .textContent();
+  expect(userEmailDisplayed.trim()).toBe(userEmailText);
 
   const placeorderButton = page.locator(".action__submit");
   await placeorderButton.click();
