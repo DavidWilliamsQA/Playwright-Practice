@@ -96,4 +96,27 @@ test.only("", async ({ browser }) => {
 
   const bookingRef = await page.locator(".booking-ref").first().textContent();
   console.log("Booking Reference: ", bookingRef);
+
+  const myBookings = page.locator("#nav-bookings");
+  await myBookings.click();
+
+  await expect(
+    page.getByText("View and manage all your ticket bookings"),
+  ).toBeVisible();
+  expect(page.url()).toBe("https://eventhub.rahulshettyacademy.com/bookings");
+
+  const bookingCards = page.locator("#booking-card");
+  await expect(bookingCards.first()).toBeVisible();
+  const bookingCount = await bookingCards.count();
+
+  for (let i = 0; i < bookingCount; ++i) {
+    if (
+      (await bookingCards.nth(i).locator(".booking-ref").textContent()) ===
+      bookingRef
+    ) {
+      await expect(bookingCards.nth(i)).toBeVisible();
+      await expect(bookingCards.nth(i)).toContainText(eventTitleText);
+      break;
+    }
+  }
 });
