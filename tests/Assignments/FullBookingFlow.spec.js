@@ -20,16 +20,25 @@ test.only("", async ({ browser }) => {
 
   await page.goto("https://eventhub.rahulshettyacademy.com/admin/events");
 
+  await expect(page.getByText("New Event")).toBeVisible();
+
   const eventTitleText = `Test Event ${Date.now()}`;
   const eventDescriptionText = "This is a test event description.";
   const eventCityText = "Test City";
   const eventVenueText = "Test Venue";
   const eventPriceText = "100";
-  const eventTotalSeats = "50";
-  const eventDateTime = `${Date.futureDate(7)}T10:00`;
+  const eventTotalSeatsText = "50";
 
-  const eventTitle = page.loctor("#event-title-input");
-  const eventDescription = page.locator("#admin-event-form");
+  const today = new Date();
+  const futureDate = new Date(today);
+  futureDate.setDate(today.getDate() + 7); // 7 days from now
+
+  // Format as YYYY-MM-DD
+  const formatted = futureDate.toISOString().split("T")[0]; // "2026-08-06"
+  const eventDateTime = `${formatted}T10:00`;
+
+  const eventTitle = page.locator("#event-title-input");
+  const eventDescription = page.locator("#admin-event-form textarea");
   const eventCity = page.getByLabel("City");
   const eventVenue = page.getByLabel("Venue");
   const eventPrice = page.getByLabel("Price ($)");
@@ -43,8 +52,29 @@ test.only("", async ({ browser }) => {
   await eventCity.fill(eventCityText);
   await eventVenue.fill(eventVenueText);
   await eventPrice.fill(eventPriceText);
-  await eventTotalSeats.fill(eventTotalSeats);
+  await eventTotalSeats.fill(eventTotalSeatsText);
   await eventDateTimeInput.fill(eventDateTime);
   //   await page.fill('input[type="datetime-local"]', '2026-07-30T14:30');
   await addEventButton.click();
+
+  const toastMessage = await page.getByText("Event created!");
+  await expect(toastMessage).toBeVisible();
+
+  await page.goto("https://eventhub.rahulshettyacademy.com/events");
+
+  await expect(page.getByText("Upcoming Events")).toBeVisible();
+
+  await page.locator("#event-card").first().waitFor();
+  const events = page.locator("[data-testid='event-card']");
+
+  const seatsBeforeBooking = 0;
+
+  const count = await events.count();
+
+  for (let i = 0; i < count; ++i) {
+    if ((await events.nth(i).locator("h3").textContent()) === eventTitleText) {
+      await events.nth(i).locator("[data-testid='book-now-btn']").click();
+      break;
+    }
+  }
 });
