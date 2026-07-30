@@ -1,9 +1,11 @@
 const { test, expect } = require("@playwright/test");
 
-test.only("", async ({ browser }) => {
+test.only("Assignment: Full booking event Flow", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto("https://eventhub.rahulshettyacademy.com/login");
+
+  const eventsPage = page.locator("#nav-events");
 
   const userEmail = page.getByPlaceholder("you@email.com");
   const userPassword = page.getByLabel("Password");
@@ -60,7 +62,7 @@ test.only("", async ({ browser }) => {
   const toastMessage = await page.getByText("Event created!");
   await expect(toastMessage).toBeVisible();
 
-  await page.goto("https://eventhub.rahulshettyacademy.com/events");
+  await eventsPage.click();
 
   await expect(page.getByText("Upcoming Events")).toBeVisible();
 
@@ -95,7 +97,6 @@ test.only("", async ({ browser }) => {
   await expect(await page.locator(".booking-ref").first()).toBeVisible();
 
   const bookingRef = await page.locator(".booking-ref").first().textContent();
-  console.log("Booking Reference: ", bookingRef);
 
   const myBookings = page.locator("#nav-bookings");
   await myBookings.click();
@@ -119,4 +120,21 @@ test.only("", async ({ browser }) => {
       break;
     }
   }
+
+  await page.goto("https://eventhub.rahulshettyacademy.com/events");
+  expect(page.locator("#event-card").first()).toBeVisible();
+  await page.reload();
+  expect(page.locator("#event-card").first()).toBeVisible();
+
+  const eventCard = page
+    .locator("#event-card")
+    .filter({ hasText: eventTitleText });
+  await expect(eventCard).toBeVisible();
+  const seatsAfterBookingText = await eventCard
+    .locator(".text-xs")
+    .nth(1)
+    .textContent();
+  const seatsAfterBooking = parseInt(seatsAfterBookingText.match(/\d+/)[0]);
+
+  expect(seatsAfterBooking).toBe(seatsBeforeBooking - 1);
 });
