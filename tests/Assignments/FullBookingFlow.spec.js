@@ -67,14 +67,33 @@ test.only("", async ({ browser }) => {
   await page.locator("#event-card").first().waitFor();
   const events = page.locator("[data-testid='event-card']");
 
-  const seatsBeforeBooking = 0;
+  let seatsBeforeBooking = 0;
 
   const count = await events.count();
 
   for (let i = 0; i < count; ++i) {
     if ((await events.nth(i).locator("h3").textContent()) === eventTitleText) {
+      const text = await events.nth(i).locator(".text-xs").nth(1).textContent();
+      seatsBeforeBooking = parseInt(text.match(/\d+/)[0]);
       await events.nth(i).locator("[data-testid='book-now-btn']").click();
       break;
     }
   }
+
+  await expect(page.locator("#ticket-count")).toHaveText("1");
+  const fullName = page.getByLabel("Full Name");
+  const email = page.locator("#customer-email");
+  const phoneNumber = page.getByPlaceholder("+91 98765 43210");
+  const confirmBookingButton = page.locator(".confirm-booking-btn");
+
+  await fullName.fill("John Doe");
+  await email.fill("test13@test.com");
+  await phoneNumber.fill("+91 98765 43210");
+  await confirmBookingButton.click();
+
+  await expect(page.getByText("Booking Confirmed!")).toBeVisible();
+  await expect(await page.locator(".booking-ref").first()).toBeVisible();
+
+  const bookingRef = await page.locator(".booking-ref").first().textContent();
+  console.log("Booking Reference: ", bookingRef);
 });
