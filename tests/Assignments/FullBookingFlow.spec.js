@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 
-test.only("Assignment: Full booking event Flow", async ({ browser }) => {
+test("Assignment: Full booking event Flow", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto("https://eventhub.rahulshettyacademy.com/login");
