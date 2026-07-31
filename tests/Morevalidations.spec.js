@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 
-test.only("Popup validation", async ({ browser }) => {
+test("Popup validation", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto("https://rahulshettyacademy.com/AutomationPractice/");
