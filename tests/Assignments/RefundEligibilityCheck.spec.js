@@ -85,7 +85,7 @@ test("Test 1 - Single ticket booking is eligible for refund", async ({
   );
 });
 
-test.only("Test 2 - Group ticket booking is NOT eligible for refund", async ({
+test("Test 2 - Group ticket booking is NOT eligible for refund", async ({
   browser,
 }) => {
   const context = await browser.newContext();
