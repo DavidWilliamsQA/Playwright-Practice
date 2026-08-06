@@ -21,9 +21,7 @@ test.beforeAll(async () => {
   orderId = response.orderId;
 });
 
-test.only("Web API test: Intercepting the network payload", async ({
-  page,
-}) => {
+test("Web API test: Intercepting the network payload", async ({ page }) => {
   await page.addInitScript((value) => {
     window.localStorage.setItem("token", value);
   }, response.token);
