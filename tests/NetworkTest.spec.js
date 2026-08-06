@@ -31,7 +31,7 @@ test.only("Web API test: Intercepting the network payload", async ({
   await page.goto("https://rahulshettyacademy.com/client/");
 
   await page.route(
-    "https://rahulshettyacademy.com/api/ecom/order/get-orders-for-customer/6a51693785b8849b49de892d",
+    "https://rahulshettyacademy.com/api/ecom/order/get-orders-for-customer/*",
     async (route) => {
       // intercepting the response
       const response = await page.request.fetch(route.request());
@@ -47,6 +47,9 @@ test.only("Web API test: Intercepting the network payload", async ({
 
   const ordersButton = page.locator("button[routerlink*='myorders']");
   await ordersButton.click();
+  await page.waitForResponse(
+    "https://rahulshettyacademy.com/api/ecom/order/get-orders-for-customer/*",
+  );
 
-  await page.locator("tbody").waitFor();
+  console.log(await page.locator(".mt-4").textContent());
 });
