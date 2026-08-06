@@ -24,7 +24,7 @@ test.beforeAll(async ({ browser }) => {
   webContext = await browser.newContext({ storageState: "state.json" });
 });
 
-test.only("Web API test2", async ({}) => {
+test("Web API test2", async ({}) => {
   const page = await webContext.newPage();
   await page.goto("https://rahulshettyacademy.com/client/");
 
