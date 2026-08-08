@@ -50,7 +50,7 @@ test("Screenshots and visual comparisons", async ({ page }) => {
   await expect(page.locator("#displayed-text")).toBeHidden();
 });
 
-test("Visual Testing", async ({ page }) => {
-  await page.goto("https://www.flightaware.com/");
-  expect(await page.screenshot()).toMatchSnapshot("flightaware-homepage.png");
+test.only("Visual Testing", async ({ page }) => {
+  await page.goto("https://www.google.com/");
+  expect(await page.screenshot()).toMatchSnapshot("google-homepage.png");
 });
