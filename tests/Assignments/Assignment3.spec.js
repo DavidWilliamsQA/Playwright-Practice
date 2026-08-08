@@ -148,7 +148,7 @@ const FOUR_EVENTS_RESPONSE = {
   pagination: { page: 1, totalPages: 1, total: 4, limit: 12 },
 };
 
-test.only("Test 1 - Banner IS visible when 6 events are returned", async ({
+test("Test 1 - Banner IS visible when 6 events are returned", async ({
   page,
 }) => {
   const apiContext = await request.newContext();
@@ -181,6 +181,35 @@ test.only("Test 1 - Banner IS visible when 6 events are returned", async ({
   await expect(page.getByText(/sandbox holds up to/i)).toContainText(
     "9 bookings",
   );
+});
 
-  await page.pause();
+test("Test 2 - Banner is NOT visible when 4 events are returned", async ({
+  page,
+}) => {
+  const apiContext = await request.newContext();
+  await page.route("**/api/events**", async (route) => {
+    const response = await page.request.fetch(route.request());
+    let body = FOUR_EVENTS_RESPONSE;
+    route.fulfill({
+      response,
+      body: JSON.stringify(body),
+    });
+  });
+
+  const utils = new AssignmentUtils(page, apiContext, payload);
+  await utils.loginAndGoToEvents();
+
+  await expect(page.getByText("Browse Events →")).toBeVisible();
+
+  await page.goto("https://eventhub.rahulshettyacademy.com/events");
+
+  const events = page.locator('[data-testid="event-card"]');
+
+  await expect(events.first()).toBeVisible();
+
+  await expect(events).toHaveCount(4);
+
+  await page.locator("text=/sandbox holds up to/i");
+
+  await expect(page.getByText(/sandbox holds up to/i)).toBeHidden();
 });
