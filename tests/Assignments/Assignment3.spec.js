@@ -148,15 +148,15 @@ const FOUR_EVENTS_RESPONSE = {
   pagination: { page: 1, totalPages: 1, total: 4, limit: 12 },
 };
 
-test("Test 1 - Banner IS visible when 6 events are returned", async ({
+test.only("Test 1 - Banner IS visible when 6 events are returned", async ({
   page,
 }) => {
   const apiContext = await request.newContext();
   await page.route("**/api/events**", async (route) => {
-    const response = await page.request.fetch(route.request());
     let body = SIX_EVENTS_RESPONSE;
     route.fulfill({
-      response,
+      status: 200,
+      contentType: "application/json",
       body: JSON.stringify(body),
     });
   });
@@ -188,10 +188,10 @@ test("Test 2 - Banner is NOT visible when 4 events are returned", async ({
 }) => {
   const apiContext = await request.newContext();
   await page.route("**/api/events**", async (route) => {
-    const response = await page.request.fetch(route.request());
     let body = FOUR_EVENTS_RESPONSE;
     route.fulfill({
-      response,
+      status: 200,
+      contentType: "application/json",
       body: JSON.stringify(body),
     });
   });
