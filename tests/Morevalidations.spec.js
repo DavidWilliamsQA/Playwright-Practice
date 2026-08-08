@@ -36,7 +36,7 @@ test("Popup validation", async ({ browser }) => {
   console.log(extractedText);
 });
 
-test.only("Screenshots and visual comparisons", async ({ page }) => {
+test("Screenshots and visual comparisons", async ({ page }) => {
   await page.goto("https://rahulshettyacademy.com/AutomationPractice/");
 
   await expect(page.locator("#displayed-text")).toBeVisible();
@@ -48,4 +48,9 @@ test.only("Screenshots and visual comparisons", async ({ page }) => {
   await page.screenshot({ path: "screenshot.png" });
 
   await expect(page.locator("#displayed-text")).toBeHidden();
+});
+
+test("Visual Testing", async ({ page }) => {
+  await page.goto("https://www.flightaware.com/");
+  expect(await page.screenshot()).toMatchSnapshot("flightaware-homepage.png");
 });
