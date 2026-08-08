@@ -35,3 +35,17 @@ test("Popup validation", async ({ browser }) => {
   const extractedText = text.split(" ")[1];
   console.log(extractedText);
 });
+
+test.only("Screenshots and visual comparisons", async ({ page }) => {
+  await page.goto("https://rahulshettyacademy.com/AutomationPractice/");
+
+  await expect(page.locator("#displayed-text")).toBeVisible();
+  await page
+    .locator("#displayed-text")
+    .screenshot({ path: "displayed-text.png" });
+  const hideButton = page.locator("#hide-textbox");
+  await hideButton.click();
+  await page.screenshot({ path: "screenshot.png" });
+
+  await expect(page.locator("#displayed-text")).toBeHidden();
+});

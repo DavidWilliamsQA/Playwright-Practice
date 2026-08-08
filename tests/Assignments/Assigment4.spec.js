@@ -11,7 +11,7 @@ const payloadGmail = {
 const BASE_URL = "https://eventhub.rahulshettyacademy.com";
 const API_URL = "https://api.eventhub.rahulshettyacademy.com/api";
 
-test.only("Cross User booking Access Denied", async ({ page }) => {
+test("Cross User booking Access Denied", async ({ page }) => {
   const apiContext = await request.newContext();
   const responseYahoo = await apiContext.post(API_URL + "/auth/login", {
     data: payloadYahoo,
