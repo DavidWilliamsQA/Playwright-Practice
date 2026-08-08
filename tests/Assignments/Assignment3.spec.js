@@ -148,7 +148,7 @@ const FOUR_EVENTS_RESPONSE = {
   pagination: { page: 1, totalPages: 1, total: 4, limit: 12 },
 };
 
-test.only("Test 1 - Banner IS visible when 6 events are returned", async ({
+test("Test 1 - Banner IS visible when 6 events are returned", async ({
   page,
 }) => {
   const apiContext = await request.newContext();
