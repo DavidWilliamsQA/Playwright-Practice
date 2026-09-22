@@ -1,5 +1,6 @@
 const { test, expect } = require("@playwright/test");
 const { LoginPage } = require("../pageobjects/LoginPage");
+const { DashboardPage } = require("../pageobjects/DashboardPage");
 
 test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const context = await browser.newContext();
@@ -8,25 +9,17 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const username = "test123333@test.com";
   const password = "Password$12";
 
+  const productName = "iphone 13 pro";
+
   const loginPage = new LoginPage(page);
+  const dashboardPage = new DashboardPage(page);
+
   await loginPage.goTo();
   await loginPage.validLogin(username, password);
 
-  const products = page.locator(".card-body");
-  const productName = "iphone 13 pro";
+  await dashboardPage.searchProductAndAddToCart(productName);
+  await dashboardPage.navigateToCart();
 
-  const cartButton = page.locator("[routerlink*='cart']");
-
-  await page.locator(".card-body b").first().waitFor();
-
-  const count = await products.count();
-  for (let i = 0; i < count; ++i) {
-    if ((await products.nth(i).locator("b").textContent()) === productName) {
-      await products.nth(i).locator("text= Add To Cart").click();
-      break;
-    }
-  }
-  await cartButton.click();
   await page.locator("div li").first().waitFor();
 
   const isVisible = await page

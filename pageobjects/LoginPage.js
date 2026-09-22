@@ -10,6 +10,7 @@ class LoginPage {
     await this.userEmail.fill(username);
     await this.userPassword.fill(password);
     await this.signInButton.click();
+    await this.page.waitForLoadState("networkidle");
   }
 
   async goTo() {
