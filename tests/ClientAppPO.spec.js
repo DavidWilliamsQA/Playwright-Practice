@@ -4,71 +4,64 @@ const testData = JSON.parse(
   JSON.stringify(require("../utils/ClientAppPOTestData.json")),
 );
 
-test.only("Implementing Page Object Model for the End to end flow test", async ({
-  browser,
-}) => {
-  const context = await browser.newContext();
-  const page = await context.newPage();
+for (const data of testData) {
+  test(`Implementing Page Object Model for the End to end flow test: ${data.productName}`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
 
-  // const username = "test123333@test.com";
-  // const password = "Password$12";
+    const pageObjectManager = new PageObjectManager(page);
 
-  // const productName = "iphone 13 pro";
+    const loginPage = pageObjectManager.getLoginPage();
+    const dashboardPage = pageObjectManager.getDashboardPage();
+    const cartPage = pageObjectManager.getCartPage();
+    const checkoutPage = pageObjectManager.getCheckoutPage();
+    const orderConfirmationPage = pageObjectManager.getOrderConfirmationPage();
+    const yourOrdersPage = pageObjectManager.getYourOrdersPage();
+    const orderSummaryPage = pageObjectManager.getOrderSummaryPage();
 
-  // const cvvCode = "123";
-  // const nameOnCard = "John Doe";
-  // const applyCoupon = "rahulshettyacademy";
+    //LOGIN PROCESS
+    await loginPage.goTo();
+    await loginPage.validLogin(data.userEmail, data.userPassword);
 
-  const pageObjectManager = new PageObjectManager(page);
+    //SEARCH AND ADD PRODUCT TO CART
+    await dashboardPage.searchProductAndAddToCart(data.productName);
+    await dashboardPage.navigateToCart();
 
-  const loginPage = pageObjectManager.getLoginPage();
-  const dashboardPage = pageObjectManager.getDashboardPage();
-  const cartPage = pageObjectManager.getCartPage();
-  const checkoutPage = pageObjectManager.getCheckoutPage();
-  const orderConfirmationPage = pageObjectManager.getOrderConfirmationPage();
-  const yourOrdersPage = pageObjectManager.getYourOrdersPage();
-  const orderSummaryPage = pageObjectManager.getOrderSummaryPage();
+    //VERIFY CART AND PROCEED TO CHECKOUT
+    await cartPage.waitForCartItems();
+    const isVisible = await cartPage.checkIfProductIsInCart(data.productName);
+    expect(isVisible).toBeTruthy();
+    await cartPage.proceedToCheckout();
 
-  //LOGIN PROCESS
-  await loginPage.goTo();
-  await loginPage.validLogin(testData.userEmail, testData.userPassword);
+    //FILL CHECKOUT INFORMATION AND PLACE ORDER
+    await checkoutPage.fillPersonalInformation(
+      data.cvvCode,
+      data.nameOnCard,
+      data.applyCoupon,
+    );
+    await checkoutPage.clickCouponButton();
+    expect(await checkoutPage.checkIfCouponApplied()).toBeTruthy();
+    await checkoutPage.selectCountryFromDropdown("India");
+    expect(
+      await checkoutPage.checkIfUserEmailDisplayed(data.userEmail),
+    ).toBeTruthy();
+    await checkoutPage.clickPlaceOrderButton();
 
-  //SEARCH AND ADD PRODUCT TO CART
-  await dashboardPage.searchProductAndAddToCart(testData.productName);
-  await dashboardPage.navigateToCart();
+    //VERIFY ORDER CONFIRMATION
+    expect(await orderConfirmationPage.checkThankYouMessage()).toBe(
+      " Thankyou for the order. ",
+    );
+    let orderId = await orderConfirmationPage.getOrderId();
+    await orderConfirmationPage.clickMyOrdersButton();
 
-  //VERIFY CART AND PROCEED TO CHECKOUT
-  await cartPage.waitForCartItems();
-  const isVisible = await cartPage.checkIfProductIsInCart(testData.productName);
-  expect(isVisible).toBeTruthy();
-  await cartPage.proceedToCheckout();
+    //VERIFY ORDER IN YOUR ORDERS PAGE
+    await yourOrdersPage.waitForTableToAppear();
+    await yourOrdersPage.searchOrderIdAndClick(orderId);
 
-  //FILL CHECKOUT INFORMATION AND PLACE ORDER
-  await checkoutPage.fillPersonalInformation(
-    testData.cvvCode,
-    testData.nameOnCard,
-    testData.applyCoupon,
-  );
-  await checkoutPage.clickCouponButton();
-  expect(await checkoutPage.checkIfCouponApplied()).toBeTruthy();
-  await checkoutPage.selectCountryFromDropdown("India");
-  expect(
-    await checkoutPage.checkIfUserEmailDisplayed(testData.userEmail),
-  ).toBeTruthy();
-  await checkoutPage.clickPlaceOrderButton();
-
-  //VERIFY ORDER CONFIRMATION
-  expect(await orderConfirmationPage.checkThankYouMessage()).toBe(
-    " Thankyou for the order. ",
-  );
-  let orderId = await orderConfirmationPage.getOrderId();
-  await orderConfirmationPage.clickMyOrdersButton();
-
-  //VERIFY ORDER IN YOUR ORDERS PAGE
-  await yourOrdersPage.waitForTableToAppear();
-  await yourOrdersPage.searchOrderIdAndClick(orderId);
-
-  //VERIFY ORDER DETAILS IN ORDER SUMMARY PAGE
-  const orderIdDetails = await orderSummaryPage.getOrderDetails();
-  expect(orderId.includes(orderIdDetails)).toBeTruthy();
-});
+    //VERIFY ORDER DETAILS IN ORDER SUMMARY PAGE
+    const orderIdDetails = await orderSummaryPage.getOrderDetails();
+    expect(orderId.includes(orderIdDetails)).toBeTruthy();
+  });
+}

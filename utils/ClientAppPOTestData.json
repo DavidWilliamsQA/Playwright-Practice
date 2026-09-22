@@ -1,8 +1,18 @@
-{
-  "userEmail": "test123333@test.com",
-  "userPassword": "Password$12",
-  "productName": "iphone 13 pro",
-  "cvvCode": "123",
-  "nameOnCard": "John Doe",
-  "applyCoupon": "rahulshettyacademy"
-}
+[
+  {
+    "userEmail": "test123333@test.com",
+    "userPassword": "Password$12",
+    "productName": "iphone 13 pro",
+    "cvvCode": "123",
+    "nameOnCard": "John Doe",
+    "applyCoupon": "rahulshettyacademy"
+  },
+  {
+    "userEmail": "test123333@test.com",
+    "userPassword": "Password$12",
+    "productName": "ZARA COAT 3",
+    "cvvCode": "123",
+    "nameOnCard": "John Doe",
+    "applyCoupon": "rahulshettyacademy"
+  }
+]
