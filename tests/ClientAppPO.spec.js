@@ -1,14 +1,9 @@
 const { test, expect } = require("@playwright/test");
-const { LoginPage } = require("../pageobjects/LoginPage");
-const { DashboardPage } = require("../pageobjects/DashboardPage");
-const { CartPage } = require("../pageobjects/CartPage");
-const { CheckoutPage } = require("../pageobjects/CheckoutPage");
-const {
-  OrderConfirmationPage,
-} = require("../pageobjects/OrderConfirmationPage");
-const { YourOrdersPage } = require("../pageobjects/YourOrdersPage");
-const { OrderSummaryPage } = require("../pageobjects/OrderSummaryPage");
-test.only("Implementing Page Object Model for login", async ({ browser }) => {
+const { PageObjectManager } = require("../pageobjects/PageObjectManager");
+
+test.only("Implementing Page Object Model for the End to end flow test", async ({
+  browser,
+}) => {
   const context = await browser.newContext();
   const page = await context.newPage();
 
@@ -21,13 +16,15 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const nameOnCard = "John Doe";
   const applyCoupon = "rahulshettyacademy";
 
-  const loginPage = new LoginPage(page);
-  const dashboardPage = new DashboardPage(page);
-  const cartPage = new CartPage(page);
-  const checkoutPage = new CheckoutPage(page);
-  const orderConfirmationPage = new OrderConfirmationPage(page);
-  const yourOrdersPage = new YourOrdersPage(page);
-  const orderSummaryPage = new OrderSummaryPage(page);
+  const pageObjectManager = new PageObjectManager(page);
+
+  const loginPage = pageObjectManager.getLoginPage();
+  const dashboardPage = pageObjectManager.getDashboardPage();
+  const cartPage = pageObjectManager.getCartPage();
+  const checkoutPage = pageObjectManager.getCheckoutPage();
+  const orderConfirmationPage = pageObjectManager.getOrderConfirmationPage();
+  const yourOrdersPage = pageObjectManager.getYourOrdersPage();
+  const orderSummaryPage = pageObjectManager.getOrderSummaryPage();
 
   //LOGIN PROCESS
   await loginPage.goTo();
