@@ -1,5 +1,8 @@
 const { test, expect } = require("@playwright/test");
 const { PageObjectManager } = require("../pageobjects/PageObjectManager");
+const testData = JSON.parse(
+  JSON.stringify(require("../utils/ClientAppPOTestData.json")),
+);
 
 test.only("Implementing Page Object Model for the End to end flow test", async ({
   browser,
@@ -7,14 +10,14 @@ test.only("Implementing Page Object Model for the End to end flow test", async (
   const context = await browser.newContext();
   const page = await context.newPage();
 
-  const username = "test123333@test.com";
-  const password = "Password$12";
+  // const username = "test123333@test.com";
+  // const password = "Password$12";
 
-  const productName = "iphone 13 pro";
+  // const productName = "iphone 13 pro";
 
-  const cvvCode = "123";
-  const nameOnCard = "John Doe";
-  const applyCoupon = "rahulshettyacademy";
+  // const cvvCode = "123";
+  // const nameOnCard = "John Doe";
+  // const applyCoupon = "rahulshettyacademy";
 
   const pageObjectManager = new PageObjectManager(page);
 
@@ -28,24 +31,30 @@ test.only("Implementing Page Object Model for the End to end flow test", async (
 
   //LOGIN PROCESS
   await loginPage.goTo();
-  await loginPage.validLogin(username, password);
+  await loginPage.validLogin(testData.userEmail, testData.userPassword);
 
   //SEARCH AND ADD PRODUCT TO CART
-  await dashboardPage.searchProductAndAddToCart(productName);
+  await dashboardPage.searchProductAndAddToCart(testData.productName);
   await dashboardPage.navigateToCart();
 
   //VERIFY CART AND PROCEED TO CHECKOUT
   await cartPage.waitForCartItems();
-  const isVisible = await cartPage.checkIfProductIsInCart(productName);
+  const isVisible = await cartPage.checkIfProductIsInCart(testData.productName);
   expect(isVisible).toBeTruthy();
   await cartPage.proceedToCheckout();
 
   //FILL CHECKOUT INFORMATION AND PLACE ORDER
-  await checkoutPage.fillPersonalInformation(cvvCode, nameOnCard, applyCoupon);
+  await checkoutPage.fillPersonalInformation(
+    testData.cvvCode,
+    testData.nameOnCard,
+    testData.applyCoupon,
+  );
   await checkoutPage.clickCouponButton();
   expect(await checkoutPage.checkIfCouponApplied()).toBeTruthy();
   await checkoutPage.selectCountryFromDropdown("India");
-  expect(await checkoutPage.checkIfUserEmailDisplayed(username)).toBeTruthy();
+  expect(
+    await checkoutPage.checkIfUserEmailDisplayed(testData.userEmail),
+  ).toBeTruthy();
   await checkoutPage.clickPlaceOrderButton();
 
   //VERIFY ORDER CONFIRMATION
