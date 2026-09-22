@@ -7,6 +7,7 @@ const {
   OrderConfirmationPage,
 } = require("../pageobjects/OrderConfirmationPage");
 const { YourOrdersPage } = require("../pageobjects/YourOrdersPage");
+const { OrderSummaryPage } = require("../pageobjects/OrderSummaryPage");
 test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
@@ -26,6 +27,7 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const checkoutPage = new CheckoutPage(page);
   const orderConfirmationPage = new OrderConfirmationPage(page);
   const yourOrdersPage = new YourOrdersPage(page);
+  const orderSummaryPage = new OrderSummaryPage(page);
 
   //LOGIN PROCESS
   await loginPage.goTo();
@@ -60,6 +62,7 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
   await yourOrdersPage.waitForTableToAppear();
   await yourOrdersPage.searchOrderIdAndClick(orderId);
 
-  const orderIdDetails = await page.locator(".col-text").textContent();
+  //VERIFY ORDER DETAILS IN ORDER SUMMARY PAGE
+  const orderIdDetails = await orderSummaryPage.getOrderDetails();
   expect(orderId.includes(orderIdDetails)).toBeTruthy();
 });
