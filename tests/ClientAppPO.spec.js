@@ -3,6 +3,9 @@ const { LoginPage } = require("../pageobjects/LoginPage");
 const { DashboardPage } = require("../pageobjects/DashboardPage");
 const { CartPage } = require("../pageobjects/CartPage");
 const { CheckoutPage } = require("../pageobjects/CheckoutPage");
+const {
+  OrderConfirmationPage,
+} = require("../pageobjects/OrderConfirmationPage");
 test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
@@ -20,6 +23,7 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const dashboardPage = new DashboardPage(page);
   const cartPage = new CartPage(page);
   const checkoutPage = new CheckoutPage(page);
+  const orderConfirmationPage = new OrderConfirmationPage(page);
 
   //LOGIN PROCESS
   await loginPage.goTo();
@@ -43,19 +47,12 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
   expect(await checkoutPage.checkIfUserEmailDisplayed(username)).toBeTruthy();
   await checkoutPage.clickPlaceOrderButton();
 
-  const thankYoumessage = await page.locator(".hero-primary").textContent();
-  expect(thankYoumessage).toBe(" Thankyou for the order. ");
-
-  let orderId = await page
-    .locator(".em-spacer-1 .ng-star-inserted")
-    .textContent();
-
-  orderId = orderId.replaceAll("|", "").trim();
-
-  console.log(orderId);
-
-  const ordersButton = page.locator("button[routerlink*='myorders']");
-  await ordersButton.click();
+  //VERIFY ORDER CONFIRMATION
+  expect(await orderConfirmationPage.checkThankYouMessage()).toBe(
+    " Thankyou for the order. ",
+  );
+  let orderId = await orderConfirmationPage.getOrderId();
+  await orderConfirmationPage.clickMyOrdersButton();
 
   await page.locator("tbody").waitFor();
 
