@@ -2,7 +2,7 @@ const { test, expect } = require("@playwright/test");
 const { LoginPage } = require("../pageobjects/LoginPage");
 const { DashboardPage } = require("../pageobjects/DashboardPage");
 const { CartPage } = require("../pageobjects/CartPage");
-
+const { CheckoutPage } = require("../pageobjects/CheckoutPage");
 test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
@@ -12,59 +12,36 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
 
   const productName = "iphone 13 pro";
 
+  const cvvCode = "123";
+  const nameOnCard = "John Doe";
+  const applyCoupon = "rahulshettyacademy";
+
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage(page);
   const cartPage = new CartPage(page);
+  const checkoutPage = new CheckoutPage(page);
 
+  //LOGIN PROCESS
   await loginPage.goTo();
   await loginPage.validLogin(username, password);
 
+  //SEARCH AND ADD PRODUCT TO CART
   await dashboardPage.searchProductAndAddToCart(productName);
   await dashboardPage.navigateToCart();
 
+  //VERIFY CART AND PROCEED TO CHECKOUT
   await cartPage.waitForCartItems();
   const isVisible = await cartPage.checkIfProductIsInCart(productName);
   expect(isVisible).toBeTruthy();
   await cartPage.proceedToCheckout();
 
-  const cvvCode = await page.locator(".input.txt").nth(1);
-  const nameOnCard = await page.locator(".input.txt").nth(2);
-  const applyCoupon = await page.locator(".input.txt").nth(3);
-  const selectCountry = await page.locator(".input.txt").nth(5);
-  const couponButton = await page.locator(".btn.btn-primary.mt-1");
-
-  await cvvCode.fill("123");
-  await nameOnCard.fill("John Doe");
-  await applyCoupon.fill("rahulshettyacademy");
-
-  await couponButton.click();
-  expect(await page.locator(".mt-1.ng-star-inserted").textContent()).toContain(
-    "* Coupon Applied",
-  );
-
-  await selectCountry.pressSequentially("ind", { delay: 100 });
-  const countryOption = page.locator(".ta-results");
-  await countryOption.waitFor();
-  const optionsCount = await countryOption.locator("button").count();
-  for (let i = 0; i < optionsCount; ++i) {
-    const optionText = await countryOption
-      .locator("button")
-      .nth(i)
-      .textContent();
-    if (optionText.trim() === "India") {
-      await countryOption.locator("button").nth(i).click();
-      break;
-    }
-  }
-
-  const userEmailDisplayed = await page
-    .locator(".user__name [type='text']")
-    .first()
-    .textContent();
-  expect(userEmailDisplayed.trim()).toBe(username);
-
-  const placeorderButton = page.locator(".action__submit");
-  await placeorderButton.click();
+  //FILL CHECKOUT INFORMATION AND PLACE ORDER
+  await checkoutPage.fillPersonalInformation(cvvCode, nameOnCard, applyCoupon);
+  await checkoutPage.clickCouponButton();
+  expect(await checkoutPage.checkIfCouponApplied()).toBeTruthy();
+  await checkoutPage.selectCountryFromDropdown("India");
+  expect(await checkoutPage.checkIfUserEmailDisplayed(username)).toBeTruthy();
+  await checkoutPage.clickPlaceOrderButton();
 
   const thankYoumessage = await page.locator(".hero-primary").textContent();
   expect(thankYoumessage).toBe(" Thankyou for the order. ");
