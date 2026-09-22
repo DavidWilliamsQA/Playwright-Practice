@@ -50,7 +50,7 @@ test("Screenshots and visual comparisons", async ({ page }) => {
   await expect(page.locator("#displayed-text")).toBeHidden();
 });
 
-test.only("Visual Testing", async ({ page }) => {
+test("Visual Testing", async ({ page }) => {
   await page.goto("https://www.google.com/");
   expect(await page.screenshot()).toMatchSnapshot("google-homepage.png");
 });
