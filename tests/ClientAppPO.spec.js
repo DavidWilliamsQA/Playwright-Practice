@@ -6,6 +6,7 @@ const { CheckoutPage } = require("../pageobjects/CheckoutPage");
 const {
   OrderConfirmationPage,
 } = require("../pageobjects/OrderConfirmationPage");
+const { YourOrdersPage } = require("../pageobjects/YourOrdersPage");
 test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
@@ -24,6 +25,7 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const cartPage = new CartPage(page);
   const checkoutPage = new CheckoutPage(page);
   const orderConfirmationPage = new OrderConfirmationPage(page);
+  const yourOrdersPage = new YourOrdersPage(page);
 
   //LOGIN PROCESS
   await loginPage.goTo();
@@ -54,17 +56,9 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
   let orderId = await orderConfirmationPage.getOrderId();
   await orderConfirmationPage.clickMyOrdersButton();
 
-  await page.locator("tbody").waitFor();
-
-  const rows = page.locator("tbody tr");
-  const rowsCount = await rows.count();
-  for (let i = 0; i < rowsCount; ++i) {
-    const rowOrderId = await rows.nth(i).locator("th").textContent();
-    if (orderId.includes(rowOrderId)) {
-      await rows.nth(i).locator("button").first().click();
-      break;
-    }
-  }
+  //VERIFY ORDER IN YOUR ORDERS PAGE
+  await yourOrdersPage.waitForTableToAppear();
+  await yourOrdersPage.searchOrderIdAndClick(orderId);
 
   const orderIdDetails = await page.locator(".col-text").textContent();
   expect(orderId.includes(orderIdDetails)).toBeTruthy();
