@@ -1,6 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const { LoginPage } = require("../pageobjects/LoginPage");
 const { DashboardPage } = require("../pageobjects/DashboardPage");
+const { CartPage } = require("../pageobjects/CartPage");
 
 test.only("Implementing Page Object Model for login", async ({ browser }) => {
   const context = await browser.newContext();
@@ -13,6 +14,7 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
 
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage(page);
+  const cartPage = new CartPage(page);
 
   await loginPage.goTo();
   await loginPage.validLogin(username, password);
@@ -20,15 +22,10 @@ test.only("Implementing Page Object Model for login", async ({ browser }) => {
   await dashboardPage.searchProductAndAddToCart(productName);
   await dashboardPage.navigateToCart();
 
-  await page.locator("div li").first().waitFor();
-
-  const isVisible = await page
-    .locator("h3:has-text('iphone 13 pro')")
-    .isVisible();
+  await cartPage.waitForCartItems();
+  const isVisible = await cartPage.checkIfProductIsInCart(productName);
   expect(isVisible).toBeTruthy();
-
-  const checkoutButton = page.locator("text=Checkout");
-  await checkoutButton.click();
+  await cartPage.proceedToCheckout();
 
   const cvvCode = await page.locator(".input.txt").nth(1);
   const nameOnCard = await page.locator(".input.txt").nth(2);
