@@ -9,12 +9,6 @@ Given(
   async function (username, password) {
     this.userEmail = username;
 
-    const browser = await playwright.chromium.launch();
-    const context = await browser.newContext();
-    const page = await context.newPage();
-
-    this.pageObjectManager = new PageObjectManager(page);
-
     const loginPage = this.pageObjectManager.getLoginPage();
     await loginPage.goTo();
     await loginPage.validLogin(username, password);
