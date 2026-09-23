@@ -1,12 +1,15 @@
 class OrderConfirmationPage {
   constructor(page) {
     this.page = page;
-    this.myOrdersButton = this.page.locator("button[routerlink*='myorders']");
+    this.myOrdersButton = this.page
+      .locator("button[routerlink*='myorders']")
+      .nth(0);
   }
 
   async getOrderId() {
     const orderId = await this.page
       .locator(".em-spacer-1 .ng-star-inserted")
+      .nth(0)
       .textContent();
     return orderId.replaceAll("|", "").trim();
   }

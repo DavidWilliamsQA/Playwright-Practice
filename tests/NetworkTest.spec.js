@@ -41,8 +41,6 @@ test("Web API test: Intercepting the network payload", async ({ page }) => {
     },
   );
 
-  await page.pause();
-
   const ordersButton = page.locator("button[routerlink*='myorders']");
   await ordersButton.click();
   await page.waitForResponse(

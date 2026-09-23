@@ -67,7 +67,7 @@ for (const data of testData) {
   });
 }
 
-customtest.only(
+customtest(
   `Implementing Page Object Model for the End to end flow test: custom fixtures`,
   async ({ browser, testDataForOrder }) => {
     const context = await browser.newContext();
