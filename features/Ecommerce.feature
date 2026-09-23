@@ -1,11 +1,11 @@
 Feature: Ecommerce validations
 
 Scenario: Placing an order successfully
-    Given I login using the "username" and "password" credentials
-    When I add "product" to the cart
-    Then I should see the "product" in the cart
+    Given I login using the "test123333@test.com" and "Password$12" credentials
+    When I add "ZARA COAT 3" to the cart
+    Then I should see the "ZARA COAT 3" in the cart
     Then I should proceed to checkout
-    When I fill in the checkout information: CVV - "123", Name on card - "John Doe" and coupon - "DISCOUNT10"
+    When I fill in the checkout information: CVV - "123", Name on card - "John Doe" and coupon - "rahulshettyacademy"
     Then I should see the coupon applied
     Then I should select the country from the dropdown
     Then I should see my email displayed

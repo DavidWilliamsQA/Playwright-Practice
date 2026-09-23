@@ -1,16 +1,19 @@
 const { Given, When, Then } = require("@cucumber/cucumber");
-const { playwright } = require("@playwright/test");
+const playwright = require("@playwright/test");
+const { expect } = require("@playwright/test");
 const { PageObjectManager } = require("../../pageobjects/PageObjectManager");
 
 Given(
   "I login using the {string} and {string} credentials",
+  { timeout: 100 * 1000 },
   async function (username, password) {
     this.userEmail = username;
+
     const browser = await playwright.chromium.launch();
     const context = await browser.newContext();
-    this.page = await context.newPage();
+    const page = await context.newPage();
 
-    this.pageObjectManager = new PageObjectManager(this.page);
+    this.pageObjectManager = new PageObjectManager(page);
 
     const loginPage = this.pageObjectManager.getLoginPage();
     await loginPage.goTo();
@@ -18,11 +21,15 @@ Given(
   },
 );
 
-When("I add {string} to the cart", async function (product) {
-  const dashboardPage = this.pageObjectManager.getDashboardPage();
-  await dashboardPage.searchProductAndAddToCart(product);
-  await dashboardPage.navigateToCart();
-});
+When(
+  "I add {string} to the cart",
+  { timeout: 100 * 1000 },
+  async function (product) {
+    const dashboardPage = this.pageObjectManager.getDashboardPage();
+    await dashboardPage.searchProductAndAddToCart(product);
+    await dashboardPage.navigateToCart();
+  },
+);
 
 Then("I should see the {string} in the cart", async function (product) {
   const cartPage = this.pageObjectManager.getCartPage();
@@ -37,7 +44,7 @@ Then("I should proceed to checkout", async function () {
 });
 
 When(
-  "I fill in the checkout information: CVV - {}, Name on card - {} and coupon - {}",
+  "I fill in the checkout information: CVV - {string}, Name on card - {string} and coupon - {string}",
   async function (cvv, nameOnCard, coupon) {
     const checkoutPage = this.pageObjectManager.getCheckoutPage();
     await checkoutPage.fillPersonalInformation(cvv, nameOnCard, coupon);
@@ -64,7 +71,7 @@ Then("I should see my email displayed", async function () {
 
 Then("I should place the order successfully", async function () {
   const checkoutPage = this.pageObjectManager.getCheckoutPage();
-  await checkoutPage.placeOrder();
+  await checkoutPage.clickPlaceOrderButton();
 });
 
 Then("I should see the order confirmation", async function () {
