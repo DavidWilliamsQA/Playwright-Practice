@@ -6,7 +6,8 @@
   "scripts": {
     "regression": "npx playwright test",
     "webTests": "npx playwright test --grep @Web",
-    "apiTests": "npx playwright test --grep @API"
+    "apiTests": "npx playwright test --grep @API",
+    "SafariNewConfig": "npx playwright test --config playwright.config1.js --project=webkit"
   },
   "keywords": [],
   "author": "",
