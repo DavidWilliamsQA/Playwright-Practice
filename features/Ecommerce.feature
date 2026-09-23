@@ -1,6 +1,6 @@
 Feature: Ecommerce validations
-
-Scenario: Placing an order successfully
+@Regression
+Scenario: Placing an order successfully End 2 End
     Given I login using the "test123333@test.com" and "Password$12" credentials
     When I add "ZARA COAT 3" to the cart
     Then I should see the "ZARA COAT 3" in the cart

@@ -75,3 +75,25 @@ Then("I should see the order confirmation", async function () {
     " Thankyou for the order. ",
   );
 });
+
+Given(
+  "I login using the Ecommerce2 application with {string} and {string} credentials",
+  async function (invalidUsername, invalidPassword) {
+    await this.page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+    const pagetitle = await this.page.title();
+    expect(pagetitle).toBe("LoginPage Practise | Rahul Shetty Academy");
+
+    const username = this.page.locator("#username");
+    const password = this.page.locator("#password");
+    const signInButton = this.page.locator("#signInBtn");
+
+    await username.fill(invalidUsername);
+    await password.fill(invalidPassword);
+    await signInButton.click();
+  },
+);
+
+Then("Verify error message is displayed", async function () {
+  const errorMessage = this.page.locator(".alert-danger");
+  await expect(errorMessage).toHaveText("Incorrect username/password.");
+});
