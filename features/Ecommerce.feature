@@ -15,6 +15,9 @@ Scenario: Placing an order successfully End 2 End
 # To run them in paralell, you can use the following command:
 # npx cucumber-js features/Ecommerce.feature --parallel 2 --exit
 
+# To run the reports for these and run them in parallel, you can use the following command:
+# npx cucumber-js features/Ecommerce.feature --parallel 2 --exit --format html:cucumber-report.html
+
 @Validation
 Scenario Outline: Unsuccessful login with invalid credentials
     Given I login using the Ecommerce2 application with "<invalidUsername>" and "<invalidPassword>" credentials
