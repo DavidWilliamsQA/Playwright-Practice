@@ -11,3 +11,16 @@ Scenario: Placing an order successfully End 2 End
     Then I should see my email displayed
     Then I should place the order successfully
     Then I should see the order confirmation
+
+# To run them in paralell, you can use the following command:
+# npx cucumber-js features/Ecommerce.feature --parallel 2 --exit
+
+@Validation
+Scenario Outline: Unsuccessful login with invalid credentials
+    Given I login using the Ecommerce2 application with "<invalidUsername>" and "<invalidPassword>" credentials
+    Then Verify error message is displayed
+
+    Examples:
+      | invalidUsername | invalidPassword |
+      | tes            | $12            |
+      | invalidUser    | invalidPass    |
