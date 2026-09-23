@@ -19,7 +19,7 @@ test.beforeAll(async () => {
   orderId = response.orderId;
 });
 
-test("Web API test: Verify order appears in the list of orders", async ({
+test("@API Web API test: Verify order appears in the list of orders", async ({
   page,
 }) => {
   await page.addInitScript((value) => {

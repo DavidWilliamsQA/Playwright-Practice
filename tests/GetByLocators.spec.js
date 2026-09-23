@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("Get by locators: Using locators to get elements on the page", async ({
+test("@Web Get by locators: Using locators to get elements on the page", async ({
   page,
 }) => {
   await page.goto("https://rahulshettyacademy.com/angularpractice/");
@@ -27,7 +27,7 @@ test("Get by locators: Using locators to get elements on the page", async ({
     .click();
 });
 
-test("End to End test using Get By Locators", async ({ browser }) => {
+test("@Web End to End test using Get By Locators", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto("https://rahulshettyacademy.com/client/#/auth/login");

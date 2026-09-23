@@ -6,7 +6,7 @@ const testData = JSON.parse(
 );
 
 for (const data of testData) {
-  test(`Implementing Page Object Model for the End to end flow test: ${data.productName}`, async ({
+  test(`@Web Implementing Page Object Model for the End to end flow test: ${data.productName}`, async ({
     browser,
   }) => {
     const context = await browser.newContext();
@@ -68,7 +68,7 @@ for (const data of testData) {
 }
 
 customtest(
-  `Implementing Page Object Model for the End to end flow test: custom fixtures`,
+  `@Web Implementing Page Object Model for the End to end flow test: custom fixtures`,
   async ({ browser, testDataForOrder }) => {
     const context = await browser.newContext();
     const page = await context.newPage();

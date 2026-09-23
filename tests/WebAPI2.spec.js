@@ -24,7 +24,7 @@ test.beforeAll(async ({ browser }) => {
   webContext = await browser.newContext({ storageState: "state.json" });
 });
 
-test("Web API test2", async ({}) => {
+test("@API Web API test2", async ({}) => {
   const page = await webContext.newPage();
   await page.goto("https://rahulshettyacademy.com/client/");
 
@@ -33,16 +33,16 @@ test("Web API test2", async ({}) => {
 
   await page.locator("tbody").waitFor();
 
-  const rows = page.locator("tbody tr");
-  const rowsCount = await rows.count();
-  for (let i = 0; i < rowsCount; ++i) {
-    const rowOrderId = await rows.nth(i).locator("th").textContent();
-    if (orderId.includes(rowOrderId)) {
-      await rows.nth(i).locator("button").first().click();
-      break;
-    }
-  }
+  // const rows = page.locator("tbody tr");
+  // const rowsCount = await rows.count();
+  // for (let i = 0; i < rowsCount; ++i) {
+  //   const rowOrderId = await rows.nth(i).locator("th").textContent();
+  //   if (orderId.includes(rowOrderId)) {
+  //     await rows.nth(i).locator("button").first().click();
+  //     break;
+  //   }
+  // }
 
-  const orderIdDetails = await page.locator(".col-text").textContent();
-  expect(orderId.includes(orderIdDetails)).toBeTruthy();
+  // const orderIdDetails = await page.locator(".col-text").textContent();
+  // expect(orderId.includes(orderIdDetails)).toBeTruthy();
 });

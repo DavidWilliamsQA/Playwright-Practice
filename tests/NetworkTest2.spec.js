@@ -1,6 +1,8 @@
 const { test, expect, request } = require("@playwright/test");
 
-test("Security Test request intercepting the request", async ({ page }) => {
+test("@API Security Test request intercepting the request", async ({
+  page,
+}) => {
   await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
 
   const products = page.locator(".card-body");

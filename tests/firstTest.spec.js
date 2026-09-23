@@ -7,7 +7,7 @@ test("First Test", async ({ page }) => {
   expect(pagetitle).toBe("Google");
 });
 
-test("Testing Login to Rahul Shetty Academy with Invalid Credentials", async ({
+test("@Web Testing Login to Rahul Shetty Academy with Invalid Credentials", async ({
   page,
 }) => {
   await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
@@ -26,7 +26,7 @@ test("Testing Login to Rahul Shetty Academy with Invalid Credentials", async ({
   await expect(errorMessage).toHaveText("Incorrect username/password.");
 });
 
-test("Testing Login to Rahul Shetty Academy", async ({ page }) => {
+test("@Web Testing Login to Rahul Shetty Academy", async ({ page }) => {
   await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
   const pagetitle = await page.title();
   expect(pagetitle).toBe("LoginPage Practise | Rahul Shetty Academy");

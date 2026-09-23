@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const { customtest } = require("../utils/fixtures");
 
-customtest("Fixtures demo", async ({ authenticatedPage, createOrder }) => {
+customtest("@Web Fixtures demo", async ({ authenticatedPage, createOrder }) => {
   await authenticatedPage.goto("https://rahulshettyacademy.com/client/");
   const ordersButton = authenticatedPage.locator(
     "button[routerlink*='myorders']",

@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 
-test("Popup validation", async ({ browser }) => {
+test("@Web Popup validation", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto("https://rahulshettyacademy.com/AutomationPractice/");
@@ -36,7 +36,7 @@ test("Popup validation", async ({ browser }) => {
   console.log(extractedText);
 });
 
-test("Screenshots and visual comparisons", async ({ page }) => {
+test("@Web Screenshots and visual comparisons", async ({ page }) => {
   await page.goto("https://rahulshettyacademy.com/AutomationPractice/");
 
   await expect(page.locator("#displayed-text")).toBeVisible();
@@ -50,7 +50,7 @@ test("Screenshots and visual comparisons", async ({ page }) => {
   await expect(page.locator("#displayed-text")).toBeHidden();
 });
 
-test("Visual Testing", async ({ page }) => {
+test("@Web Visual Testing", async ({ page }) => {
   await page.goto("https://www.google.com/");
   expect(await page.screenshot()).toMatchSnapshot("google-homepage.png");
 });
