@@ -24,6 +24,7 @@ test("@Web Testing Login to Rahul Shetty Academy with Invalid Credentials", asyn
 
   const errorMessage = page.locator(".alert-danger");
   await expect(errorMessage).toHaveText("Incorrect username/password.");
+  // just to rerun teh pipeline
 });
 
 test("@Web Testing Login to Rahul Shetty Academy", async ({ page }) => {
